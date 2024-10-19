@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz with Language Toggle</title>
+    <style>
+    body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #e8f0fe;
+    margin: 0;
+    padding: 0;
+    color: #444;
+}
+
+header {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 1.8em;
+}
+
+.language-toggle {
+    text-align: center;
+    margin: 20px;
+}
+
+#question {
+    margin: 20px;
+    font-size: 18px;
+}
+
+main {
+    max-width: 600px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.options {
+    list-style-type: none;
+    padding: 0;
+}
+
+.option {
+    margin-bottom: 10px;
+}
+
+.option button {
+    width: 100%;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: left;
+    font-size: 1em;
+}
+
+.option button:hover {
+    background-color: #f0f0f0;
+}
+
+button#submit-answer {
+    display: block;
+    margin: 20px auto;
+    width: 200px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button#submit-answer:hover {
+    background-color: #333;
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+</style>
+</head>
+<body>
+    <header>
+        <img src="Government.png" alt="Logo">
+        <h1>Quiz: <span id="category-name">+</span></h1>
+    </header>
+    <div class="language-toggle">
+        <button onclick="toggleLanguage()">Eng/Urd</button>
+    </div>
+    <main>
+        <section class="quiz-container">
+            <div id="question">+</div>
+            <div class="options">
+                <div class="option"><button onclick="selectOption(this)"> </button></div>
+                <div class="option"><button onclick="selectOption(this)"> </button></div>
+                <div class="option"><button onclick="selectOption(this)"> </button></div>
+                <div class="option"><button onclick="selectOption(this)"> </button></div>
+            </div>
+            <button id="submit-answer" onclick="submitAnswer()">Submit</button>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Quiz and Learning Games</p>
+    </footer>
+    <script>
+   var isEnglish = true;
+
+const quizData = {
+   computer_science: {
+        english: [
+            { question: "What was the main component used in the first generation of computers?", options: ["Vacuum tubes", "Transistors", "Integrated Circuits (IC)", "Microprocessor"], correct: "Vacuum tubes" },
+            { question: "How many digits are used in the binary number system?", options: ["8", "10", "2", "16"], correct: "2" },
+            { question: "Which part of the computer hardware temporarily stores data?", options: ["ROM", "RAM", "HDD", "CPU"], correct: "RAM" },
+            { question: "Which device is used for inputting data into the computer?", options: ["Keyboard", "Monitor", "Printer", "Hard Drive"], correct: "Keyboard" },
+            { question: "What does CPU stand for?", options: ["Control Processing Unit", "Central Processing Unit", "Computer Processing Unit", "Central Print Unit"], correct: "Central Processing Unit" }
+        ],
+        urdu: [
+            { question: "کمپیوٹر کی پہلی جنریشن میں استعمال ہونے والے اہم پرزہ جات کون سے تھے؟", options: ["ویکیوم ٹیوب", "ٹرانزسٹر", "آئی سی (انٹیگریٹڈ سرکٹ)", "مائیکروپروسیسر"], correct: "ویکیوم ٹیوب" },
+            { question: "بائنری نمبر سسٹم میں کتنے ہندسے استعمال ہوتے ہیں؟", options: ["8", "10", "2", "16"], correct: "2" },
+            { question: "کمپیوٹر ہارڈویئر کا کون سا حصہ ڈیٹا کو عارضی طور پر ذخیرہ کرتا ہے؟", options: ["ROM", "RAM", "HDD", "CPU"], correct: "RAM" },
+            { question: "کون سی ڈیوائس کمپیوٹر کے ساتھ ڈیٹا کی ان پٹ کرنے کے لیے استعمال ہوتی ہے؟", options: ["کی بورڈ", "مانیٹر", "پرنٹر", "ہارڈ ڈرائیو"], correct: "کی بورڈ" },
+            { question: "سی پی یو (CPU) کا کیا مطلب ہے؟", options: ["Control Processing Unit", "Central Processing Unit", "Computer Processing Unit", "Central Print Unit"], correct: "Central Processing Unit" }
+        ]
+    },
+    urdu: {
+        english: [
+            { question: "مرزا غالب کی شخصیت کی سب سے بڑی خصوصیت کیا تھی؟", options: ["اس کی شاعری", "اس کی علمیت", "اس کی سادگی", "اس کی سخاوت"], correct: "اس کی علمیت" },
+            { question: "کاہلی مضمون میں کاہلی کے کیا نقصانات بیان کیے گئے ہیں؟", options: ["اقتصادی نقصان", "صحت کی خرابی", "معاشرتی مسائل", "تمام مذکورہ"], correct: "تمام مذکورہ" },
+            { question: "شاعروں کے لطیفے میں لطیفے کا مقصد کیا ہوتا ہے؟", options: ["تفریح", "معاشرتی تنقید", "علم کی ترسیل", "ذاتی خوشی"], correct: "تفریح" },
+            { question: "نصوح اور سلیم کی گفتگو کہانی میں نصوح کا سب سے بڑا پیغام کیا تھا؟", options: ["معاشرتی اصلاح", "ذاتی ترقی", "اقتصادی حالت", "تعلیمی اہمیت"], correct: "معاشرتی اصلاح" },
+            { question: "پنچایت کہانی میں پنچایت کا بنیادی کردار کیا تھا؟", options: ["مقامی مسائل کا حل", "عدلیہ کی خدمات", "اقتصادی مدد", "تعلیمی فروغ"], correct: "مقامی مسائل کا حل" },
+            { question: "آرام و سکون مضمون میں سکون حاصل کرنے کے کیا طریقے بیان کیے گئے ہیں؟", options: ["تفریح", "ورزش", "آرام", "تمام مذکورہ"], correct: "تمام مذکورہ" },
+            { question: "لہو اور قالین کہانی میں لہو اور قالین کے درمیان کیا فرق بیان کیا گیا ہے؟", options: ["مادی فرق", "معاشرتی فرق", "نفسیاتی فرق", "ثقافتی فرق"], correct: "نفسیاتی فرق" },
+            { question: "امتحان مضمون میں امتحان کی کیا اہمیت بیان کی گئی ہے؟", options: ["علم کی پیمائش", "شخصیت کی ترقی", "معاشرتی بہتری", "اقتصادی ترقی"], correct: "علم کی پیمائش" },
+            { question: "ملکی پرندے اور دوسرے جانور مضمون میں جانوروں کی کس خصوصیت پر زور دیا گیا ہے؟", options: ["ان کی خوبصورتی", "ان کی معاشرتی اہمیت", "ان کی زندگی کا طریقہ", "ان کی بقاء"], correct: "ان کی زندگی کا طریقہ" },
+            { question: "قد را یاز کہانی میں کرداروں کے درمیان سب سے بڑی کشمکش کیا تھی؟", options: ["معاشرتی مسئلے", "ذاتی اختلاف", "اقتصادی مسائل", "تعلیمی چیلنج"], correct: "ذاتی اختلاف" }
+        ],
+        urdu: [
+            { question: "مرزا غالب کی شخصیت کی سب سے بڑی خصوصیت کیا تھی؟", options: ["اس کی شاعری", "اس کی علمیت", "اس کی سادگی", "اس کی سخاوت"], correct: "اس کی علمیت" },
+            { question: "کاہلی مضمون میں کاہلی کے کیا نقصانات بیان کیے گئے ہیں؟", options: ["اقتصادی نقصان", "صحت کی خرابی", "معاشرتی مسائل", "تمام مذکورہ"], correct: "تمام مذکورہ" },
+            { question: "شاعروں کے لطیفے میں لطیفے کا مقصد کیا ہوتا ہے؟", options: ["تفریح", "معاشرتی تنقید", "علم کی ترسیل", "ذاتی خوشی"], correct: "تفریح" },
+            { question: "نصوح اور سلیم کی گفتگو کہانی میں نصوح کا سب سے بڑا پیغام کیا تھا؟", options: ["معاشرتی اصلاح", "ذاتی ترقی", "اقتصادی حالت", "تعلیمی اہمیت"], correct: "معاشرتی اصلاح" },
+            { question: "پنچایت کہانی میں پنچایت کا بنیادی کردار کیا تھا؟", options: ["مقامی مسائل کا حل", "عدلیہ کی خدمات", "اقتصادی مدد", "تعلیمی فروغ"], correct: "مقامی مسائل کا حل" },
+            { question: "آرام و سکون مضمون میں سکون حاصل کرنے کے کیا طریقے بیان کیے گئے ہیں؟", options: ["تفریح", "ورزش", "آرام", "تمام مذکورہ"], correct: "تمام مذکورہ" },
+            { question: "لہو اور قالین کہانی میں لہو اور قالین کے درمیان کیا فرق بیان کیا گیا ہے؟", options: ["مادی فرق", "معاشرتی فرق", "نفسیاتی فرق", "ثقافتی فرق"], correct: "نفسیاتی فرق" },
+            { question: "امتحان مضمون میں امتحان کی کیا اہمیت بیان کی گئی ہے؟", options: ["علم کی پیمائش", "شخصیت کی ترقی", "معاشرتی بہتری", "اقتصادی ترقی"], correct: "علم کی پیمائش" },
+            { question: "ملکی پرندے اور دوسرے جانور مضمون میں جانوروں کی کس خصوصیت پر زور دیا گیا ہے؟", options: ["ان کی خوبصورتی", "ان کی معاشرتی اہمیت", "ان کی زندگی کا طریقہ", "ان کی بقاء"], correct: "ان کی زندگی کا طریقہ" },
+            { question: "قد را یاز کہانی میں کرداروں کے درمیان سب سے بڑی کشمکش کیا تھی؟", options: ["معاشرتی مسئلے", "ذاتی اختلاف", "اقتصادی مسائل", "تعلیمی چیلنج"], correct: "ذاتی اختلاف" }
+        ]
+    },
+    physics: {
+        english: [
+            { question: "What is the fundamental unit in the SI system?", options: ["Meter", "Kilogram", "Second", "Ampere"], correct: "Kilogram" },
+            { question: "If a body has a velocity of 20 m/s and an acceleration of 5 m/s², what will be its velocity after 4 seconds?", options: ["40 m/s", "60 m/s", "20 m/s", "80 m/s"], correct: "60 m/s" },
+            { question: "According to Newton’s second law, what is the formula for force?", options: ["Force = Mass × Acceleration", "Force = Mass / Acceleration", "Force = Acceleration / Mass", "Force = Mass + Acceleration"], correct: "Force = Mass × Acceleration" },
+            { question: "In which condition is the effect of torque from a force the greatest?", options: ["When the line of action of the force is perpendicular to the axis", "When the line of action of the force is along the axis", "When the line of action of the force is below the axis", "When the line of action of the force is above the axis"], correct: "When the line of action of the force is perpendicular to the axis" },
+            { question: "What is the value of gravitational acceleration on the surface of the Earth?", options: ["9.8 m/s²", "10 m/s²", "9.8 km/s²", "10 km/s²"], correct: "9.8 m/s²" },
+            { question: "What is the SI unit of energy?", options: ["Joule", "Newton", "Watt", "Pascal"], correct: "Joule" },
+            { question: "What is the formula for calculating the density of a substance?", options: ["Density = Weight / Volume", "Density = Volume / Weight", "Density = Volume × Weight", "Density = Weight + Volume"], correct: "Weight / Volume" },
+            { question: "Which methods are included in the transfer of heat?", options: ["Conduction, convection, radiation", "Conduction, convection, transmission", "Conduction, diffusion, expansion", "Conduction, transfer, growth"], correct: "Conduction, convection, radiation" },
+            { question: "How is heat transferred in a liquid?", options: ["Conduction", "Radiation", "Convection", "Transmission"], correct: "Convection" }
+        ],
+        urdu: [
+            { question: "نظام میں سب سے بنیادی اکائی کیا ہے؟", options: ["میٹر", "کلوگرام", "سیکنڈ", "آمپئیر"], correct: "کلوگرام" },
+            { question: "اگر ایک جسم کی رفتار 20 m/s ہے اور تیزی 5 m/s² ہے، تو 4 سیکنڈ کے بعد جسم کی نیا رفتار کیا ہوگی؟", options: ["40 m/s", "60 m/s", "20 m/s", "80 m/s"], correct: "60 m/s" },
+            { question: "نیوٹن کے دوسرے قانون کے مطابق، فورس کا فارمولا کیا ہے؟", options: ["فورس = ماس × تیزی", "فورس = ماس / تیزی", "فورس = تیزی / ماس", "فورس = ماس + تیزی"], correct: "فورس = ماس × تیزی" },
+            { question: "فورس کا گھمانے کا اثر کس حالت میں سب سے زیادہ ہوتا ہے؟", options: ["جب فورس کی لائن عمل محور کے عمود پر ہو", "جب فورس کی لائن عمل محور کے ساتھ ہو", "جب فورس کی لائن عمل محور کے نچلے حصے پر ہو", "جب فورس کی لائن عمل محور کے اوپر ہو"], correct: "جب فورس کی لائن عمل محور کے عمود پر ہو" },
+            { question: "زمین کی سطح پر کشش ثقل کی تیزی کی قیمت کیا ہے؟", options: ["9.8 m/s²", "10 m/s²", "9.8 km/s²", "10 km/s²"], correct: "9.8 m/s²" },
+            { question: "توانائی کا SI یونٹ کیا ہے؟", options: ["جول", "نیوٹن", "واٹ", "پاسکل"], correct: "جول" },
+            { question: "مادہ کی کثافت کا فارمولا کیا ہے؟", options: ["کثافت = وزن / حجم", "کثافت = حجم / وزن", "کثافت = حجم × وزن", "کثافت = وزن + حجم"], correct: "وزن / حجم" },
+            { question: "حرارت کی منتقلی کے کون سے طریقے شامل ہیں؟", options: ["رابطہ، گردش، شعاع", "رابطہ، کنویکشن، ترسیل", "رابطہ، تحلیل، پھیلاؤ", "رابطہ، تبادلہ، نمو"], correct: "رابطہ، گردش، شعاع" },
+            { question: "کس طریقے سے حرارت مائع میں منتقل ہوتی ہے؟", options: ["رابطہ", "شعاع", "کنویکشن", "ترسیل"], correct: "کنویکشن" }
+        ]
+   },
+    chemistry: {
+        urdu: [
+            { question: "کیمیائی عنصر کی سب سے چھوٹی اکائی کونسی ہے جو اپنے کیمیائی خواص برقرار رکھتی ہے؟", options: ["ایٹم", "مالیکیول", "آئن", "مرکب"], correct: "ایٹم" },
+            { question: "ان میں سے کونسا جسمانی خصوصیت نہیں ہے؟", options: ["پگھلنے کا نقطہ", "کثافت", "رد عمل", "ابلنے کا نقطہ"], correct: "رد عمل" },
+            { question: "ایک الیکٹران کا چارج کیا ہوتا ہے؟", options: ["مثبت", "منفی", "غیر متعین", "متغیر"], correct: "منفی" },
+            { question: "کونسا ذراتی ذرات پروٹون کے قریب mass رکھتے ہیں؟", options: ["الیکٹران", "نیوٹرون", "فوٹون", "پوزیٹرون"], correct: "نیوٹرون" },
+            { question: "پیر یا ڈک ٹیبل میں کونسا گروپ نوبل گیسز پر مشتمل ہے؟", options: ["گروپ 1", "گروپ 2", "گروپ 17", "گروپ 18"], correct: "گروپ 18" },
+            { question: "پیر یا ڈک ٹیبل میں ایک ہی دور میں عناصر میں کیا مشترک ہوتا ہے؟", options: ["ویلینس الیکٹرانز", "الیکٹران شیلز", "نیوٹرونز", "پروٹونز"], correct: "الیکٹران شیلز" },
+            { question: "پانی کے مالیکیول (H₂O) میں آکسیجن ایٹم ہائیڈروجن ایٹمز کے ساتھ کس قسم کی بانڈنگ سے جڑتا ہے؟", options: ["آئنک بانڈنگ", "کولنٹ بانڈنگ", "میٹالک بانڈنگ", "ہائیڈروجن بانڈنگ"], correct: "کولنٹ بانڈنگ" },
+            { question: "کونسا مالیکیول ٹیترا ہیڈرل شکل میں ہوتا ہے؟", options: ["پانی (H₂O)", "میتھین (CH₄)", "کاربن ڈائی آکسائیڈ (CO₂)", "امونیا (NH₃)"], correct: "میتھین (CH₄)" },
+            { question: "کس حالت مادہ کے ذرات کی سب سے زیادہ حرکی توانائی ہوتی ہے؟", options: ["ٹھوس", "مائع", "گیس", "پلازما"], correct: "گیس" },
+            { question: "کونسی پروسیس ہے جس میں ٹھوس براہ راست گیس میں تبدیل ہوتا ہے؟", options: ["تغیر", "سبلیمیشن", "پگھلنا", "منجمد ہونا"], correct: "سبلیمیشن" }
+        ],
+        english: [
+            { question: "What is the smallest unit of a chemical element that retains its chemical properties?", options: ["Atom", "Molecule", "Ion", "Compound"], correct: "Atom" },
+            { question: "Which of the following is not a physical property of matter?", options: ["Melting point", "Density", "Reactivity", "Boiling point"], correct: "Reactivity" },
+            { question: "What is the charge of an electron?", options: ["Positive", "Negative", "Neutral", "Variable"], correct: "Negative" },
+            { question: "Which subatomic particle has a mass nearly equal to that of a proton?", options: ["Electron", "Neutron", "Photon", "Positron"], correct: "Neutron" },
+            { question: "Which group in the periodic table contains the noble gases?", options: ["Group 1", "Group 2", "Group 17", "Group 18"], correct: "Group 18" },
+            { question: "Elements in the same period of the periodic table have the same number of:", options: ["Valence electrons", "Electron shells", "Neutrons", "Protons"], correct: "Electron shells" },
+            { question: "In a water molecule (H₂O), the oxygen atom forms bonds with hydrogen atoms by:", options: ["Ionic bonding", "Covalent bonding", "Metallic bonding", "Hydrogen bonding"], correct: "Covalent bonding" },
+            { question: "Which molecule has a tetrahedral shape?", options: ["Water (H₂O)", "Methane (CH₄)", "Carbon dioxide (CO₂)", "Ammonia (NH₃)"], correct: "Methane (CH₄)" },
+            { question: "Which state of matter has the highest kinetic energy for its particles?", options: ["Solid", "Liquid", "Gas", "Plasma"], correct: "Gas" },
+            { question: "What is the process called when a solid turns directly into a gas?", options: ["Condensation", "Sublimation", "Melting", "Freezing"], correct: "Sublimation" }
+        ]
+    },
+      English: {
+          english: [
+        { question: "Who is referred to as The Saviour of Mankind in the chapter?", options: ["Prophet Muhammad (PBUH)", "Jesus Christ", "Mahatma Gandhi", "Nelson Mandela"], correct: "Prophet Muhammad (PBUH)" },
+        { question: "What is the main imagery used in the poem Stopping by Woods on a Snowy Evening?", options: ["A snowy forest", "A bustling city", "A crowded marketplace", "A sunny meadow" ], correct: "A snowy forest" },
+        { question: "What is the essence of patriotism described in the chapter? ", options: ["Love for one's country", "Desire for wealth", "Pursuit of knowledge", "Travel and adventure"], correct: "Love for one's country" },
+        { question: "What is the main theme of the chapter The Saviour of Mankind? ", options: ["Historical events", "Religious teachings", "Social justice", "Scientific discoveries" ], correct: "Religious teachings" },
+        { question: "What is a primary concern about media highlighted in the chapter?", options: ["Overuse of technology", "Impact on public opinion", "Lack of content diversity", "Media ownership"], correct: "Impact on public opinion" },
+        { question: "According to the chapter, how does media influence society?", options: ["Overuse of technology", "Impact on public opinion", "Lack of content diversity", "Media ownership"], correct: "By shaping public perception" },
+        { question: "What is the central theme of the poem Daffodils? ", options: ["The beauty of nature", "The power of love", "The importance of friendship", "The challenges of life"], correct: "The beauty of nature" },
+        { question: "Which of the following is a key characteristic of a patriotic person according to the chapter?", options: ["Self-interest", "National pride", "Isolation", "Neglect of duties"], correct: "National pride" },
+        { question: "Who was Hazrat Asma and what was she known for? ", options: ["A famous poet", "A prominent social reformer", "A companion of Prophet Muhammad (PBUH)", "A historical queen "], correct: "A companion of Prophet Muhammad (PBUH)" },
+        { question: " ", options: [ ], correct: " " }
+     ],
+      urdu: [
+          { question: "باب میں انسانیت کے نجات دہندہ کے طور پر کس کا حوالہ دیا گیا ہے؟", 
+           options: ["حضرت محمد (صلی اللہ علیہ وآلہ وسلم)", "عیسیٰ مسیح", "مہاتما گاندھی", "نیلسن منڈیلا"], 
+            correct: "حضرت محمد (صلی اللہ علیہ وآلہ وسلم)" 
+        },
+          { question: "برفانی شام میں جنگل کے کنارے رکنے کی نظم میں بنیادی تصویری منظر کیا ہے؟", 
+            options: ["برفانی جنگل", "مصروف شہر", "بھیڑ بھاڑ والا بازار", "دھوپ بھرا میدان"], 
+            correct: "برفانی جنگل" 
+        },
+          { question: "باب میں بیان کردہ حب الوطنی کا جوہر کیا ہے؟", 
+            options: ["اپنے ملک سے محبت", "دولت کی خواہش", "علم کا حصول", "سفر اور مہم جوئی"], 
+            correct: "اپنے ملک سے محبت" 
+        },
+         { question: "باب 'انسانیت کے نجات دہندہ' کا مرکزی موضوع کیا ہے؟", 
+            options: ["تاریخی واقعات", "مذہبی تعلیمات", "سماجی انصاف", "سائنسی دریافتیں"], 
+            correct: "مذہبی تعلیمات" 
+        },
+         { question: "باب میں میڈیا کے بارے میں بنیادی تشویش کیا ہے؟", 
+            options: ["ٹیکنالوجی کا زیادہ استعمال", "عوامی رائے پر اثر", "مواد کی تنوع کی کمی", "میڈیا کی ملکیت"], 
+            correct: "عوامی رائے پر اثر" 
+        },
+         { question: "باب کے مطابق، میڈیا معاشرے کو کیسے متاثر کرتا ہے؟", 
+            options: ["ٹیکنالوجی کا زیادہ استعمال", "عوامی رائے پر اثر", "مواد کی تنوع کی کمی", "میڈیا کی ملکیت"], 
+            correct: "عوامی رائے پر اثر" 
+        },
+           { question: "نظم 'ڈافوڈلز' کا مرکزی موضوع کیا ہے؟", 
+            options: ["قدرت کا حسن", "محبت کی طاقت", "دوستی کی اہمیت", "زندگی کے چیلنجز"], 
+            correct: "قدرت کا حسن" 
+        },
+         { question: "باب کے مطابق، ایک محب وطن شخص کی کون سی اہم خصوصیت ہے؟", 
+            options: ["خود غرضی", "قومی فخر", "تنہائی", "فرائض کی نظراندازی"], 
+            correct: "قومی فخر" 
+        },
+          { question: "حضرت اسماء کون تھیں اور وہ کس لئے مشہور تھیں؟", 
+            options: ["ایک مشہور شاعرہ", "ایک نمایاں سماجی مصلح", "حضرت محمد (صلی اللہ علیہ وآلہ وسلم) کی ساتھی", "ایک تاریخی ملکہ"], 
+            correct: "حضرت محمد (صلی اللہ علیہ وآلہ وسلم) کی ساتھی" }
+      ]
+   },
+    Islamiyat: {
+      urdu: [
+         { question: "قرآن مجید کا ترجمہ کیوں ضروری ہے؟",
+            options: ["قرآن کو سمجھنے کے لیے", "نماز کے لیے", "تلاوت کے لیے", "حفظ کے لیے"],
+            correct: "قرآن کو سمجھنے کے لیے"
+        },
+        { question: "قرآن مجید کے ترجمہ میں کس زبان کا سب سے زیادہ استعمال ہوا ہے؟",
+            options: ["عربی", "فارسی", "اردو", "انگریزی"],
+            correct: "اردو"
+        },
+         { question: "عقیدہ توحید کا کیا مطلب ہے؟",
+            options: ["ایک خدا پر ایمان", "متعدد خداؤں پر ایمان", "انسانیت پر ایمان", "کسی خدا پر ایمان نہ ہونا"],
+            correct: "ایک خدا پر ایمان"
+        },
+         { question: "ایمان کے کون سے رکن میں فرشتوں پر ایمان شامل ہے؟",
+            options: ["عقیدہ توحید", "عقیدہ رسالت", "ملائکہ، آسمانی کتب اور آخرت پر ایمان", "عبادات"],
+            correct: "ملائکہ، آسمانی کتب اور آخرت پر ایمان"
+        },
+         { question: "نماز اسلامی عبادات میں کیا مقام رکھتی ہے؟",
+            options: ["نماز اسلام کا دوسرا رکن ہے", "نماز اسلام کا پہلا رکن ہے", "نماز اسلام کا چوتھا رکن ہے", "نماز کوئی عبادت نہیں ہے"],
+            correct: "نماز اسلام کا دوسرا رکن ہے"
+        },
+         { question: "رمضان میں روزہ کیوں فرض کیا گیا ہے؟",
+            options: ["صبر اور تقویٰ کے حصول کے لیے", "مال و دولت کمانے کے لیے", "جسمانی صحت کے لیے", "سفر کے دوران سہولت کے لیے"],
+            correct: "صبر اور تقویٰ کے حصول کے لیے"
+        },
+         { question: "فتح مکہ کب ہوئی؟",
+            options: ["8 ہجری", "5 ہجری", "10 ہجری", "3 ہجری"],
+            correct: "8 ہجری"
+        },
+         { question: "عام الوفود کا کیا مطلب ہے؟",
+            options: ["وفود کا سال", "فتح کا سال", "ہجرت کا سال", "تعلیم کا سال"],
+            correct: "وفود کا سال"
+        },
+         { question: "حضرت محمد مصطفیٰ ﷺ کی عبادات کا ذوق کیا تھا؟",
+            options: ["طویل قیام اور سجدے", "زکوٰۃ دینا", "حج کرنا", "غزوات میں شرکت"],
+            correct: "طویل قیام اور سجدے"
+        },
+         { question: "حضرت محمد مصطفیٰ ﷺ کی سخاوت کا کیا مظاہرہ تھا؟",
+            options: ["لوگوں کو عطیات دینا", "اپنی ضروریات کے لیے سب کچھ خرچ کرنا", "کسی کو کچھ نہ دینا", "صرف اپنے خاندان کو دینا"],
+            correct: "لوگوں کو عطیات دینا" }
+       ],
+    English: [
+           { question: "قرآن مجید کا ترجمہ کیوں ضروری ہے؟",
+            options: ["قرآن کو سمجھنے کے لیے", "نماز کے لیے", "تلاوت کے لیے", "حفظ کے لیے"],
+            correct: "قرآن کو سمجھنے کے لیے"
+        },
+        { question: "قرآن مجید کے ترجمہ میں کس زبان کا سب سے زیادہ استعمال ہوا ہے؟",
+            options: ["عربی", "فارسی", "اردو", "انگریزی"],
+            correct: "اردو"
+        },
+         { question: "عقیدہ توحید کا کیا مطلب ہے؟",
+            options: ["ایک خدا پر ایمان", "متعدد خداؤں پر ایمان", "انسانیت پر ایمان", "کسی خدا پر ایمان نہ ہونا"],
+            correct: "ایک خدا پر ایمان"
+        },
+         { question: "ایمان کے کون سے رکن میں فرشتوں پر ایمان شامل ہے؟",
+            options: ["عقیدہ توحید", "عقیدہ رسالت", "ملائکہ، آسمانی کتب اور آخرت پر ایمان", "عبادات"],
+            correct: "ملائکہ، آسمانی کتب اور آخرت پر ایمان"
+        },
+         { question: "نماز اسلامی عبادات میں کیا مقام رکھتی ہے؟",
+            options: ["نماز اسلام کا دوسرا رکن ہے", "نماز اسلام کا پہلا رکن ہے", "نماز اسلام کا چوتھا رکن ہے", "نماز کوئی عبادت نہیں ہے"],
+            correct: "نماز اسلام کا دوسرا رکن ہے"
+        },
+         { question: "رمضان میں روزہ کیوں فرض کیا گیا ہے؟",
+            options: ["صبر اور تقویٰ کے حصول کے لیے", "مال و دولت کمانے کے لیے", "جسمانی صحت کے لیے", "سفر کے دوران سہولت کے لیے"],
+            correct: "صبر اور تقویٰ کے حصول کے لیے"
+        },
+         { question: "فتح مکہ کب ہوئی؟",
+            options: ["8 ہجری", "5 ہجری", "10 ہجری", "3 ہجری"],
+            correct: "8 ہجری"
+        },
+         { question: "عام الوفود کا کیا مطلب ہے؟",
+            options: ["وفود کا سال", "فتح کا سال", "ہجرت کا سال", "تعلیم کا سال"],
+            correct: "وفود کا سال"
+        },
+         { question: "حضرت محمد مصطفیٰ ﷺ کی عبادات کا ذوق کیا تھا؟",
+            options: ["طویل قیام اور سجدے", "زکوٰۃ دینا", "حج کرنا", "غزوات میں شرکت"],
+            correct: "طویل قیام اور سجدے"
+        },
+         { question: "حضرت محمد مصطفیٰ ﷺ کی سخاوت کا کیا مظاہرہ تھا؟",
+            options: ["لوگوں کو عطیات دینا", "اپنی ضروریات کے لیے سب کچھ خرچ کرنا", "کسی کو کچھ نہ دینا", "صرف اپنے خاندان کو دینا"],
+            correct: "لوگوں کو عطیات دینا" }
+       ]
+    }
+};
+
+const categoryName = document.getElementById('category-name');
+const questionText = document.getElementById('question');
+const options = document.querySelectorAll('.option button');
+
+// Retrieve category from URL
+const urlParams = new URLSearchParams(window.location.search);
+const category = urlParams.get('category') || 'computer_science'; // Default to 'science' if no category in URL
+categoryName.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+
+const currentQuiz = quizData[category];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedAnswer = null;
+
+function loadQuestion() {
+    const currentQuestion = currentQuiz[isEnglish ? 'english' : 'urdu'][currentQuestionIndex];
+    questionText.textContent = currentQuestion.question;
+    options.forEach((option, index) => {
+        option.textContent = currentQuestion.options[index];
+        option.parentElement.classList.remove('selected', 'correct', 'incorrect');
+        option.disabled = false; // Re-enable options for new question
+    });
+    selectedAnswer = null; // Reset selected answer
+}
+
+window.selectOption = function(button) {
+    if (selectedAnswer) return; // If an answer has already been selected, do nothing
+
+    options.forEach(option => option.parentElement.classList.remove('selected'));
+    button.parentElement.classList.add('selected');
+    selectedAnswer = button.textContent;
+}
+
+window.submitAnswer = function() {
+    if (!selectedAnswer) {
+        alert("Please select an answer!");
+        return;
+    }
+
+    const correctAnswer = currentQuiz[isEnglish ? 'english' : 'urdu'][currentQuestionIndex].correct;
+
+    if (selectedAnswer === correctAnswer) {
+        score += 2;
+        alert("Correct! Your current score is: " + score);
+    } else {
+        alert("Incorrect! The correct answer was: " + correctAnswer);
+    }
+
+    currentQuestionIndex++;
+    if (currentQuestionIndex < currentQuiz[isEnglish ? 'english' : 'urdu'].length) {
+        loadQuestion();
+    } else {
+        alert("Quiz completed! Your final score is: " + score);
+        window.location.href = "index.html"; // Redirect to index.html after the quiz ends
+    }
+}
+
+window.toggleLanguage = function() {
+    isEnglish = !isEnglish;
+    loadQuestion(); // Reload the question in the selected language
+}
+
+loadQuestion();
+</script>
+</body>
+</html>

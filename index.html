@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz and Learning Games</title>
+    <style>
+       /* Universal Styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
+
+header {
+    background-color: #4CAF50; /* Same color for both pages */
+    color: white;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+header img {
+    height: 40px;
+    margin-right: 10px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 2em;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+.categories {
+    margin-top: 20px;
+}
+
+.category-list {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.category {
+    display: block;
+    width: 150px;
+    padding: 15px;
+    margin: 10px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #333;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.category:hover {
+    background-color: #4CAF50;
+    color: white;
+    transform: translateY(-5px);
+}
+
+footer {
+    background-color: #333; /* Same color for both pages */
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    width: 100%;
+    bottom: 0;
+}
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Quiz and Learning Games</h1>
+    </header>
+    <main>
+        <section class="categories">
+            <h2>Select a Quiz Category</h2>
+            <div class="category-list">
+                <!-- 9th Class Subjects -->
+                <a href="quiz.html?category=computer_science" class="category">Computer Science</a>
+                <a href="quiz.html?category=biology" class="category">Biology</a>
+                <a href="quiz.html?category=chemistry" class="category">Chemistry</a>
+                <a href="quiz.html?category=physics" class="category">Physics</a>
+                <a href="http://100.109.204.148:45267//quiz.html?category=math" class="category">Math</a>
+                <a href="quiz.html?category=urdu" class="category">urdu</a>
+                <a href="quiz.html?category=English" class="category">english</a>
+                <a href="quiz.html?category=tarjuma-quran" class="category">Tarjuma-quran</a>
+                <a href="quiz.html?category=Islamiyat" class="category">islamiyat</a>
+      
+            </div>
+        </section>
+    </main>
+    <footer>
+        <p>© 2024 Quiz and Learning Games</p>
+    </footer>
+</body>
+</html>
