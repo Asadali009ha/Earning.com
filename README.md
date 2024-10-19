@@ -1,1 +1,1 @@
-# Earning.com
+# music-earning.com
